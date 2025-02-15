@@ -1,7 +1,7 @@
-#Execute Command
+# Execute Command
 
-##Compile Command
+## Compile Command
 `javac Main.java`
 
-##Execute Command
+## Execute Command
 `java Main.java`
