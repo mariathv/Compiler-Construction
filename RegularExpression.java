@@ -1,5 +1,7 @@
 class RegularExpression {
     private String pattern;
+    
+    //
 
     public RegularExpression(String pattern) {
         this.pattern = pattern;

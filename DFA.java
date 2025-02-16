@@ -19,6 +19,8 @@ class DFA {
         }
     }
 
+    
+    // RE -> NFA -> DFA 
     public void setStartState(String state) {
         this.startState = state;
         states.add(state);
@@ -38,14 +40,21 @@ class DFA {
         }
     }
 
-    public void parse(String input) {
+    public boolean parse(String input) {
+    
         String currentState = startState;
         Set<String> visitedStates = new HashSet<>(); // to store unique visited states (for display after)
-
+        
+        boolean errFlag = false;
         for (char symbol : input.toCharArray()) {
             visitedStates.add(currentState);
             if (transitions.containsKey(currentState) && transitions.get(currentState).containsKey(symbol)) {
                 currentState = transitions.get(currentState).get(symbol);
+            }else {
+            	if(input == "my_var")
+            	System.out.println("exiting parser, " + currentState + symbol);
+            	errFlag=true;
+            	break;
             }
             // for humdun
             // "q0": { 'a' -> "q1" },
@@ -55,5 +64,9 @@ class DFA {
 
         visitedStates.add(currentState);
         System.out.println("Unique states visited: " + visitedStates);
+        
+        
+        return !errFlag;
     }
 }
+

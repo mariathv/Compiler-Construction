@@ -1,34 +1,21 @@
+import java.io.*;
+import java.util.*;
 public class Main {
-
-    /*
-     * WORK FLOW FOR RE NFA DFA
-     */
     public static void main(String[] args) {
-        // RE to NFA later
-        NFA nfa = new NFA();
-        nfa.setStartState("q0");
-        nfa.addState("q1", false);
-        nfa.addState("q2", true);
-
-        nfa.addTransition("q0", 'a', "q1");
-        nfa.addTransition("q1", 'b', "q2");
-        nfa.addTransition("q2", 'a', "q2");
-
-        nfa.displayTransitions();
-
-        nfa.parse("aba");
-
-        DFA dfa = new DFA();
-        dfa.setStartState("q0");
-        dfa.addState("q1", false);
-        dfa.addState("q2", true);
-
-        dfa.addTransition("q0", 'a', "q1");
-        dfa.addTransition("q1", 'b', "q2");
-        dfa.addTransition("q2", 'a', "q2"); 
-
-        dfa.displayTransitions();
-
-        dfa.parse("aba");
+        LexicalAnalyzer lexer = new LexicalAnalyzer();
+        
+        String inputProgram = """
+                intgr x = 10;
+                chr y = 'A';
+                true;
+                false;
+                my_var = 25;
+                """;
+        
+        System.out.println("Tokenized Output:");
+        List<String> tokens = lexer.tokenize(inputProgram.replaceAll("[;]", " "));
+        for (String token : tokens) {
+            System.out.println(token);
+        }
     }
 }
