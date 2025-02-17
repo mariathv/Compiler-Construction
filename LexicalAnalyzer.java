@@ -2,8 +2,12 @@ import java.io.*;
 import java.util.*;
 
 class LexicalAnalyzer {
+	
+    
     private DFA identifierDFA, integerDFA, keywordDFA, charDFA, operatorDFA;
     private Set<String> keywords = new HashSet<>(Arrays.asList("true", "false", "intgr", "chr"));
+    private ErrorHandler errHandler = new ErrorHandler();
+    private Utilities utils = new Utilities();
 
     public LexicalAnalyzer() {
         identifierDFA = createIdentifierNFA().toDFA();
@@ -70,22 +74,34 @@ class LexicalAnalyzer {
 
     public List<String> tokenize(String input) {
         List<String> tokens = new ArrayList<>();
-        String[] words = input.split("\\s+");
+        String[] lines = input.split("\n");  // split input by lines
+        int lineNumber = 1;
 
-        for (String word : words) {
-            if (keywords.contains(word)) {
-                tokens.add("KEYWORD: " + word);
-            } else if (identifierDFA.parse(word)) {
-                tokens.add("IDENTIFIER: " + word);
-            } else if (integerDFA.parse(word)) {
-                tokens.add("INTEGER: " + word);
-            } else if (charDFA.parse(word)) {
-                tokens.add("CHARACTER: " + word);
-            } else if (operatorDFA.parse(word)) {
-                tokens.add("OPERATOR: " + word);
-            } else {
-                tokens.add("UNKNOWN: " + word);
+        for (String line : lines) {
+            String[] words = line.split("\\s+");  // split words by spaces
+
+            for (String word : words) {
+                if (word.isEmpty()) continue;  
+
+                if (keywords.contains(word)) {
+                    tokens.add("KEYWORD: " + word);
+                } else if (identifierDFA.parse(word)) {
+                    tokens.add("IDENTIFIER: " + word);
+                } else if (integerDFA.parse(word)) {
+                    tokens.add("INTEGER: " + word);
+                } else if (charDFA.parse(word)) {
+                    tokens.add("CHARACTER: " + word);
+                } else if (operatorDFA.parse(word)) {
+                    tokens.add("OPERATOR: " + word);
+                } else {
+                	
+
+                    errHandler.setError(utils.RED + "Unrecognized Token on Line " + lineNumber + utils.RESET, lineNumber);
+                    errHandler.displayErr();
+                    tokens.add("UNKNOWN (Line " + lineNumber + "): " + word);
+                }
             }
+            lineNumber++;  
         }
         return tokens;
     }

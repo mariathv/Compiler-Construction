@@ -42,7 +42,7 @@ class DFA {
 
     public boolean parse(String input) {
     
-        String currentState = startState;
+        String currentState = startState; //starting state of the dfa
         Set<String> visitedStates = new HashSet<>(); // to store unique visited states (for display after)
         
         boolean errFlag = false;
@@ -51,10 +51,9 @@ class DFA {
             if (transitions.containsKey(currentState) && transitions.get(currentState).containsKey(symbol)) {
                 currentState = transitions.get(currentState).get(symbol);
             }else {
-            	if(input == "my_var")
-            	System.out.println("exiting parser, " + currentState + symbol);
             	errFlag=true;
-            	break;
+            	return false;
+            
             }
             // for humdun
             // "q0": { 'a' -> "q1" },
@@ -63,7 +62,7 @@ class DFA {
         }
 
         visitedStates.add(currentState);
-        System.out.println("Unique states visited: " + visitedStates);
+        System.out.println(" " + input + " " + "Unique states visited: " + visitedStates);
         
         
         return !errFlag;
