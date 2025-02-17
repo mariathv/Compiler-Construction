@@ -101,4 +101,76 @@ class NFA {
 
         System.out.println("Unique states visited: " + visitedStates);
     }
+    //closure method for converting to DFA
+    public DFA toDFA() {
+        DFA dfa = new DFA();
+        Map<Set<String>, String> stateMapping = new HashMap<>(); // in form {{set(reachable via null) == null closure}, state} e.g {{q2,q3}, q1}
+        Queue<Set<String>> queue = new LinkedList<>();
+        
+        Set<String> startClosure = epsilonClosure(Set.of(startState)); //compute the null closure oif the starting state (init stepp)
+        queue.add(startClosure); 
+        stateMapping.put(startClosure, "q0"); //mapping to state
+        dfa.setStartState("q0");
+        
+        int stateCounter = 1; //counter for dfa states
+        
+        while (!queue.isEmpty()) {
+            Set<String> nfaStates = queue.poll();
+            String dfaState = stateMapping.get(nfaStates);
+            
+            if (!Collections.disjoint(nfaStates, finalStates)) { //disjoint == if any of the nfaStates matches finalStates, mark it as a final state
+                dfa.addState(dfaState, true);
+            } else {
+                dfa.addState(dfaState, false);
+            }
+            
+            Map<Character, Set<String>> newTransitions = new HashMap<>();
+            
+            //grouping nfa states by SYMBOL
+            for (String nfaState : nfaStates) { // suppose {q0, q1} , iterate thru both
+                if (transitions.containsKey(nfaState)) { //check if transition tables has entries with the nfa state, or in other words if the state has any transition
+                    for (Map.Entry<Character, Set<String>> entry : transitions.get(nfaState).entrySet()) {//get all transitions in form q0 = {'a' -> {q1,q2}, 'b' -> {q1,q3}} 
+                        char symbol = entry.getKey(); //entry in format :: { a -> {q0, q1}} , extract its symbol
+                        newTransitions.putIfAbsent(symbol, new HashSet<>());
+                        newTransitions.get(symbol).addAll(entry.getValue());
+                    }
+                }
+            }
+            //find the next nfa states reachable by that symbol
+            for (Map.Entry<Character, Set<String>> entry : newTransitions.entrySet()) {
+                char symbol = entry.getKey();
+                Set<String> nextStates = epsilonClosure(entry.getValue());
+                //if not already mapped, create a new state 
+                if (!stateMapping.containsKey(nextStates)) {
+                    String newDFAState = "q" + stateCounter++;
+                    stateMapping.put(nextStates, newDFAState);
+                    queue.add(nextStates);
+                }
+                
+                dfa.addTransition(dfaState, symbol, stateMapping.get(nextStates));
+            }
+        }
+        
+        return dfa;
+    }
+    
+    private Set<String> epsilonClosure(Set<String> states) {
+        Stack<String> stack = new Stack<>();
+        Set<String> closure = new HashSet<>(states);
+        stack.addAll(states);
+        
+        while (!stack.isEmpty()) {
+            String state = stack.pop();
+            if (transitions.containsKey(state) && transitions.get(state).containsKey('\u03B5')) { // ε transitions
+                for (String next : transitions.get(state).get('\u03B5')) {
+                    if (!closure.contains(next)) {
+                        closure.add(next);
+                        stack.push(next);
+                    }
+                }
+            }
+        }
+        
+        return closure;
+    }
 }
