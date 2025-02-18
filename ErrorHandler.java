@@ -16,6 +16,6 @@ public class ErrorHandler {
 	}
 	
 	void displayErr() {
-		System.out.println(utils.YELLOW + "(" + line + ")  **  " + error);
+		System.out.println( error);
 	}
 }

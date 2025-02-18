@@ -5,6 +5,7 @@ class DFA {
     private Map<String, Map<Character, String>> transitions;
     private String startState;
     private Set<String> finalStates;
+    private Utilities utils = new Utilities();
 
     public DFA() {
         this.states = new HashSet<>(); // set for de uniqueness
@@ -33,9 +34,21 @@ class DFA {
 
     public void displayTransitions() {
         System.out.println("\nDFA Transition Table:");
+        System.out.printf("%-15s%-15s%-15s\n", "State", "Symbol", "Next State");
+        System.out.println("----------------------------------------");
+
         for (String state : transitions.keySet()) {
             for (char symbol : transitions.get(state).keySet()) {
-                System.out.println(state + " | " + symbol + " | " + transitions.get(state).get(symbol));
+                System.out.printf("%-15s%-15s%-15s\n", state, symbol, transitions.get(state).get(symbol));
+            }
+        }
+
+        System.out.println(utils.CYAN + "\nFinal States:" + utils.RESET);
+        if (finalStates.isEmpty()) {
+            System.out.println("No final states.");
+        } else {
+            for (String finalState : finalStates) {
+                System.out.println(finalState);
             }
         }
     }
@@ -62,8 +75,9 @@ class DFA {
         }
 
         visitedStates.add(currentState);
-        System.out.println(" " + input + " " + "Unique states visited: " + visitedStates);
-        
+        System.out.printf("%-20s%-25s\n", utils.GREEN + input + utils.RESET, visitedStates);
+
+
         
         return !errFlag;
     }

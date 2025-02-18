@@ -4,7 +4,7 @@ import java.util.*;
 class LexicalAnalyzer {
 	
     
-    private DFA identifierDFA, integerDFA, keywordDFA, charDFA, operatorDFA;
+    public DFA identifierDFA, integerDFA, keywordDFA, charDFA, operatorDFA;
     private Set<String> keywords = new HashSet<>(Arrays.asList("true", "false", "intgr", "chr"));
     private ErrorHandler errHandler = new ErrorHandler();
     private Utilities utils = new Utilities();
@@ -69,40 +69,64 @@ class LexicalAnalyzer {
         nfa.setStartState("q0");
         nfa.addState("q1", true);
         nfa.addTransition("q0", '=', "q1");
+        nfa.addTransition("q0", '+', "q1");
+        nfa.addTransition("q0", '-', "q1");
+        nfa.addTransition("q0", '%', "q1");
+        nfa.addTransition("q0", '/', "q1");
         return nfa;
     }
+    
+    public String removeDeComments(String input) {
+        // Remove single-line comments (//...)
+        input = input.replaceAll("//.*", "");
 
-    public List<String> tokenize(String input) {
+        // Remove multi-line comments (/* ... */)
+        input = input.replaceAll("/\\*.*?\\*/", "");
+
+        return input;
+    }
+
+
+    public List<String> tokenize(String input, SymbolTable symbolTable) {
         List<String> tokens = new ArrayList<>();
-        String[] lines = input.split("\n");  // split input by lines
+        
+        input = input.replace(";", "");
+
+        input = removeDeComments(input);
+        String[] lines = input.split("\n");
         int lineNumber = 1;
+        
 
         for (String line : lines) {
-            String[] words = line.split("\\s+");  // split words by spaces
+            String[] words = line.split("\\s+");
 
             for (String word : words) {
-                if (word.isEmpty()) continue;  
+                if (word.isEmpty()) continue;
 
-                if (keywords.contains(word)) {
+                if (keywords.contains(word)) { //DFA here later
                     tokens.add("KEYWORD: " + word);
+                    symbolTable.insert(word, "KEYWORD", symbolTable.getCurrentScope(), null);
                 } else if (identifierDFA.parse(word)) {
                     tokens.add("IDENTIFIER: " + word);
+                    symbolTable.insert(word, "IDENTIFIER", symbolTable.getCurrentScope(), null);
                 } else if (integerDFA.parse(word)) {
                     tokens.add("INTEGER: " + word);
+                    symbolTable.insert(word, "INTEGER", symbolTable.getCurrentScope(), word);
                 } else if (charDFA.parse(word)) {
                     tokens.add("CHARACTER: " + word);
+                    symbolTable.insert(word, "CHARACTER", symbolTable.getCurrentScope(), word);
                 } else if (operatorDFA.parse(word)) {
                     tokens.add("OPERATOR: " + word);
+                    symbolTable.insert(word, "OPERATOR", symbolTable.getCurrentScope(), null);
                 } else {
-                	
-
-                    errHandler.setError(utils.RED + "Unrecognized Token on Line " + lineNumber + utils.RESET, lineNumber);
+                	errHandler.setError(utils.RED + "Unrecognized Token on Line " + lineNumber + " ** ( - " + word +  " ) " + utils.RESET, lineNumber);
                     errHandler.displayErr();
-                    tokens.add("UNKNOWN (Line " + lineNumber + "): " + word);
+                    tokens.add("UNKNOWN (Line  " + lineNumber + "): " + word);
                 }
             }
-            lineNumber++;  
+            lineNumber++;
         }
         return tokens;
     }
+
 }

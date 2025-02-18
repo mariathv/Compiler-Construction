@@ -14,4 +14,27 @@ public class Utilities {
     Utilities() {
     	
     }
+    
+    public void displayMenu(String heading) {
+        int boxWidth = heading.length() + 4;
+        System.out.print(CYAN);
+        printBorder(boxWidth, '┌', '┐');
+        System.out.println("│ " + YELLOW + heading + PURPLE + " │");
+        printBorder(boxWidth, '└', '┘');
+        System.out.print(RESET);
+    }
+    
+    private void printBorder(int width, char leftCorner, char rightCorner) {
+        System.out.print(leftCorner);
+        for (int i = 0; i < width - 2; i++) {
+            System.out.print("─");
+        }
+        System.out.println(rightCorner);
+    }
+    
+    public  void clearScreen() {
+        // ANSI escape code to clear the screen
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 }

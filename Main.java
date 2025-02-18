@@ -1,41 +1,28 @@
 import java.io.*;
 import java.util.*;
-
 public class Main {
+	//lexical analyzer WONT be checking  for syntax error (whether ; exists, whether two identifiers are used with the smae name, IT WILL SOLELY CHECK FOR TOKENS)
     public static void main(String[] args) {
         LexicalAnalyzer lexer = new LexicalAnalyzer();
-
+        SymbolTable symbolTable = new SymbolTable();
+        Utilities utils = new Utilities();
+        
         String inputProgram = """
-                intgr x = 10;
+                int x = 10;
                 chr y = 'A';
                 true;
                 false;
                 0my_var = 25;
+                my_var = 12 + 25;
+                //maria
                 """;
-
-        // String inputProgram = """
-        // intgr x = 10;
-        // chr y = 'A';
-        // boo b = true;
-        // dcl z = 2.1;
-        // dcl e = 3.11115;
-        // intgr e = 2^2;
-        // true;
-        // false;
-        // my_var = 25;
-        // inp(num);
-        // out("yaya");
-        // out(numm);
-        // string = "i want to kill myself"
-        // ## dont do this
-        // ## kys please
-        // dont do this yes hahaj
-        // """;
-
-        System.out.println("Tokenized Output:");
-        List<String> tokens = lexer.tokenize(inputProgram.replaceAll("[;]", " "));
-        for (String token : tokens) {
-            System.out.println(token);
-        }
+	       
+        System.out.println(utils.CYAN +  "\nUNIQUE STATES VISITED \n----------------------" + utils.RESET);
+        List<String> tokens = lexer.tokenize(inputProgram.replaceAll("[;]", " "),symbolTable);
+        
+        
+        System.out.println(utils.CYAN +  "\nSYMBOL TABLE \n----------------------" + utils.RESET);
+        symbolTable.display();
+    	
     }
 }
