@@ -1,4 +1,4 @@
-import java.io.*;
+	import java.io.*;
 import java.util.*;
 public class Main {
 	//lexical analyzer WONT be checking  for syntax error (whether ; exists, whether two identifiers are used with the smae name, IT WILL SOLELY CHECK FOR TOKENS)
@@ -10,6 +10,7 @@ public class Main {
         String inputProgram = """
                 int x = 10;
                 chr y = 'A';
+                intgr ff_dad = 11;
                 true;
                 false;
                 0my_var = 25;
