@@ -101,6 +101,113 @@ class NFA {
 
         System.out.println("Unique states visited: " + visitedStates);
     }
+    
+
+    // ===========================
+    // RE to NFA Algorithm
+    // ===========================
+ public static NFA fromRegex(String regex) {
+    	
+        NFA nfa = new NFA();
+        int counter = 0; // Start counter from 1 instead of 0
+        String Start = "q" + counter; 
+        nfa.setStartState(Start);
+        
+        for (int i = 0; i < regex.length(); i++) {
+            char ch = regex.charAt(i);
+
+            if (ch == '|') {
+            	String state = "q" + counter;
+            	nfa.addState(state, true);
+            	i++;
+            	ch = regex.charAt(i);
+            	counter++;
+            	state = "q" + counter;
+            	nfa.addTransition("q0", ch, state);
+            } 
+            else if(ch == '[')
+            {
+            	i++;
+            	for(int j = 0; ; j++,i++)
+            	{
+            		ch = regex.charAt(i);
+            		if(ch == ']')
+            		{
+            			counter++;
+            			break;
+            		}
+            		else if(ch == '-')
+            		{
+            			char ch1 = regex.charAt(i-1);
+            			char ch2 = regex.charAt(i+1);
+            			String state1 = "q" + counter;
+            			String state2 = "q" + (counter+1);
+            			for (char c = ch1; c <= ch2; c++) {
+            				nfa.addTransition(state1, c, state2);
+            			}
+            			i+=1;
+            		}
+            		else
+            		{
+            			String state1 = "q" + counter;
+            			String state2 = "q" + (counter+1);
+            			nfa.addTransition(state1, ch, state2);
+            		}
+            		
+            	}
+            }
+            else if(ch == '*')
+            {
+            	if(regex.charAt(i-1) != ']')
+            		continue;
+            	int j = i;
+            	while (regex.charAt(j) != '[')
+            		j--;
+            	j++;
+            	for(; ; j++)
+            	{
+            		ch = regex.charAt(j);
+            		if(ch == ']')
+            		{
+            			break;
+            		}
+            		else if(ch == '-')
+            		{
+            			char ch1 = regex.charAt(j-1);
+            			char ch2 = regex.charAt(j+1);
+            			String state1 = "q" + counter;
+            			String state2 = "q" + (counter);
+            			for (char c = ch1; c <= ch2; c++) {
+            				nfa.addTransition(state1, c, state2);
+            			}
+            			j+=1;
+            		}
+            		else
+            		{
+            			String state1 = "q" + counter;
+            			String state2 = "q" + (counter);
+            			nfa.addTransition(state1, ch, state2);
+            		}
+            		
+            	}
+            	
+            }
+            else {
+                String newStart = "q" + counter;
+                counter++;
+                String newFinal = "q" + counter;
+
+                nfa.addTransition(newStart, ch, newFinal);
+            }
+        }
+
+        String Final = "q" + counter;
+        nfa.addState(Final, true);
+        
+        return nfa;
+    }
+    
+    
     //closure method for converting to DFA
     public DFA toDFA() {
         DFA dfa = new DFA();

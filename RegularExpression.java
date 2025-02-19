@@ -1,7 +1,17 @@
+import java.util.*;
+
 class RegularExpression {
     private String pattern;
-    
-    //
+    private static final Map<String, String> regexPatterns = new HashMap<>();
+
+    static {
+        // Predefined Regular Expressions
+    	regexPatterns.put("KEYWORDS", "true|false|intgr|chr");
+        regexPatterns.put("IDENTIFIERS", "[a-z_][a-z0-9_]*");
+        regexPatterns.put("CONSTANTS", "[0-9][0-9]*");
+        regexPatterns.put("OPERATORS", "+|-|*|%|=");
+        regexPatterns.put("CHARACTER", "'[a-zA-Z]'");
+    }
 
     public RegularExpression(String pattern) {
         this.pattern = pattern;
@@ -12,7 +22,18 @@ class RegularExpression {
     }
 
     public NFA toNFA() {
-        // later
-        return new NFA();
+        return NFA.fromRegex(pattern);
+    }
+
+    public static NFA getNFAForType(String type) {
+        if (!regexPatterns.containsKey(type)) {
+            throw new IllegalArgumentException("Invalid regex type: " + type);
+        }
+        return NFA.fromRegex(regexPatterns.get(type));
+    }
+
+    public static void displayRegexPatterns() {
+        System.out.println("\nStored Regular Expressions:");
+        regexPatterns.forEach((key, value) -> System.out.println(key + ": " + value));
     }
 }
