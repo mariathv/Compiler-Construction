@@ -14,6 +14,8 @@ public class Main {
                 false;
                 0my_var = 25;
                 my_var = 12 + 25;
+                dec ee = 311.22
+                strg ww = "hel$#@^&"
                 //maria
                 """;
 	       

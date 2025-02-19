@@ -4,18 +4,18 @@ import java.util.*;
 class LexicalAnalyzer {
 	
     
-    public DFA identifierDFA, integerDFA, keywordDFA, charDFA, operatorDFA;
+    public DFA identifierDFA, integerDFA, keywordDFA, charDFA, operatorDFA, decimalDFA, stringDFA;
     private ErrorHandler errHandler = new ErrorHandler();
     private Utilities utils = new Utilities();
 
     public LexicalAnalyzer() {
     	keywordDFA =  RegularExpression.getNFAForType("KEYWORDS").toDFA();
-//    	RegularExpression.getNFAForType("KEYWORDS").displayTransitions();	
+ //   	RegularExpression.getNFAForType("KEYWORDS").displayTransitions();	
 //    	keywordDFA.displayTransitions();
     	
     	identifierDFA = RegularExpression.getNFAForType("IDENTIFIERS").toDFA();    	
-//    	identifierDFA = RegularExpression.getNFAForType("IDENTIFIERS").toDFA();
 //    	RegularExpression.getNFAForType("IDENTIFIERS").displayTransitions();
+//    	identifierDFA.displayTransitions();
 //        
         integerDFA = RegularExpression.getNFAForType("CONSTANTS").toDFA();
 //        RegularExpression.getNFAForType("CONSTANTS").displayTransitions();
@@ -29,6 +29,10 @@ class LexicalAnalyzer {
         operatorDFA = RegularExpression.getNFAForType("OPERATORS").toDFA();
 //        RegularExpression.getNFAForType("OPERATORS").displayTransitions();
 //        operatorDFA.displayTransitions();
+        
+        decimalDFA = RegularExpression.getNFAForType("DECIMAL").toDFA();
+        stringDFA = RegularExpression.getNFAForType("LITERAL").toDFA();
+        //RegularExpression.getNFAForType("LITERAL").displayTransitions();
     }
 
 //    private NFA createIdentifierNFA() {
@@ -127,9 +131,15 @@ class LexicalAnalyzer {
                 } else if (integerDFA.parse(word)) {
                     tokens.add("INTEGER: " + word);
                     symbolTable.insert(word, "INTEGER", symbolTable.getCurrentScope(), word);
+                }else if(decimalDFA.parse(word)) {
+                	tokens.add("DECIMAL: " + word);
+                    symbolTable.insert(word, "DECIMAL", symbolTable.getCurrentScope(), word);	
                 } else if (charDFA.parse(word)) {
                     tokens.add("CHARACTER: " + word);
                     symbolTable.insert(word, "CHARACTER", symbolTable.getCurrentScope(), word);
+                } else if (stringDFA.parse(word)){ 
+                	tokens.add("LITERAL: " + word);
+                	symbolTable.insert(word, "LITERAL", symbolTable.getCurrentScope(), word);
                 } else if (operatorDFA.parse(word)) {
                     tokens.add("OPERATOR: " + word);
                     symbolTable.insert(word, "OPERATOR", symbolTable.getCurrentScope(), null);

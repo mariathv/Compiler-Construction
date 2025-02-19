@@ -112,6 +112,9 @@ class NFA {
         int counter = 0; // Start counter from 1 instead of 0
         String Start = "q" + counter; 
         nfa.setStartState(Start);
+        counter++;
+        String sta = "q" + counter;
+        nfa.addTransition("q0", 'ε', sta);
         
         for (int i = 0; i < regex.length(); i++) {
             char ch = regex.charAt(i);
@@ -123,7 +126,10 @@ class NFA {
             	ch = regex.charAt(i);
             	counter++;
             	state = "q" + counter;
-            	nfa.addTransition("q0", ch, state);
+            	nfa.addTransition("q0", 'ε', state);
+            	counter++;
+            	String state2 = "q" + counter;
+            	nfa.addTransition(state, ch, state2);
             } 
             else if(ch == '[')
             {
@@ -133,7 +139,7 @@ class NFA {
             		ch = regex.charAt(i);
             		if(ch == ']')
             		{
-            			counter++;
+            			counter+=2;
             			break;
             		}
             		else if(ch == '-')
@@ -142,8 +148,11 @@ class NFA {
             			char ch2 = regex.charAt(i+1);
             			String state1 = "q" + counter;
             			String state2 = "q" + (counter+1);
+            			String state3 = "q" + (counter+2);
+            			
             			for (char c = ch1; c <= ch2; c++) {
-            				nfa.addTransition(state1, c, state2);
+            				nfa.addTransition(state1, 'ε', state2);
+            				nfa.addTransition(state2, c, state3);
             			}
             			i+=1;
             		}
@@ -151,7 +160,9 @@ class NFA {
             		{
             			String state1 = "q" + counter;
             			String state2 = "q" + (counter+1);
-            			nfa.addTransition(state1, ch, state2);
+            			String state3 = "q" + (counter+2);
+            			nfa.addTransition(state1, 'ε', state2);
+            			nfa.addTransition(state2, ch, state3);
             		}
             		
             	}
@@ -164,6 +175,10 @@ class NFA {
             	while (regex.charAt(j) != '[')
             		j--;
             	j++;
+            	String s1 = "q" + counter;
+                counter++;
+                String s2 = "q" + counter;
+                nfa.addTransition(s1, 'ε', s2);
             	for(; ; j++)
             	{
             		ch = regex.charAt(j);
@@ -195,9 +210,12 @@ class NFA {
             else {
                 String newStart = "q" + counter;
                 counter++;
+                String newEpsilon = "q" + counter;
+                counter++;
                 String newFinal = "q" + counter;
 
-                nfa.addTransition(newStart, ch, newFinal);
+                nfa.addTransition(newStart, 'ε', newEpsilon);
+                nfa.addTransition(newEpsilon, ch, newFinal);
             }
         }
 
