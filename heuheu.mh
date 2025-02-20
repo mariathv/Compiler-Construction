@@ -4,6 +4,6 @@ true;
 false;
 0my_var = 25;
 my_var = 12 + 25;
-dec ee = 311.22
+dec ee = 3111.22
 strg www = "hLE&$#@^"
-intgr qq = 10^2;
+intgr qq = 11^2;

@@ -18,8 +18,8 @@ class LexicalAnalyzer {
 //    	identifierDFA.displayTransitions();
 //        
         integerDFA = RegularExpression.getNFAForType("CONSTANTS").toDFA();
-//        RegularExpression.getNFAForType("CONSTANTS").displayTransitions();
-//       integerDFA.displayTransitions();
+//      RegularExpression.getNFAForType("CONSTANTS").displayTransitions();
+//      integerDFA.displayTransitions();
    
         
         charDFA = RegularExpression.getNFAForType("CHARACTER").toDFA();
@@ -31,6 +31,9 @@ class LexicalAnalyzer {
 //        operatorDFA.displayTransitions();
         
         decimalDFA = RegularExpression.getNFAForType("DECIMAL").toDFA();
+        //RegularExpression.getNFAForType("DECIMAL").displayTransitions();
+       // decimalDFA.displayTransitions();
+        
         stringDFA = RegularExpression.getNFAForType("LITERAL").toDFA();
         //RegularExpression.getNFAForType("LITERAL").displayTransitions();
         

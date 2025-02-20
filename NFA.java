@@ -221,6 +221,7 @@ class NFA {
             	
             }
             else {
+            	
                 String newStart = "q" + counter;
                 counter++;
                 String newEpsilon = "q" + counter;
@@ -229,6 +230,9 @@ class NFA {
 
                 nfa.addTransition(newStart, 'ε', newEpsilon);
                 nfa.addTransition(newEpsilon, ch, newFinal);
+                
+                
+                
             }
         }
 
