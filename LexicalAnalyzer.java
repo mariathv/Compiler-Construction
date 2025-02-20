@@ -1,105 +1,105 @@
 import java.io.*;
 import java.util.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 class LexicalAnalyzer {
-	
-    
+
     public DFA identifierDFA, integerDFA, keywordDFA, charDFA, operatorDFA, decimalDFA, stringDFA, exponentDFA;
     private ErrorHandler errHandler = new ErrorHandler();
     private Utilities utils = new Utilities();
 
     public LexicalAnalyzer() {
-    	keywordDFA =  RegularExpression.getNFAForType("KEYWORDS").toDFA();
- //   	RegularExpression.getNFAForType("KEYWORDS").displayTransitions();	
- //   	keywordDFA.displayTransitions();
-    	
-    	identifierDFA = RegularExpression.getNFAForType("IDENTIFIERS").toDFA();    	
-//    	RegularExpression.getNFAForType("IDENTIFIERS").displayTransitions();
-//    	identifierDFA.displayTransitions();
-//        
+        keywordDFA = RegularExpression.getNFAForType("KEYWORDS").toDFA();
+        // RegularExpression.getNFAForType("KEYWORDS").displayTransitions();
+        // keywordDFA.displayTransitions();
+
+        identifierDFA = RegularExpression.getNFAForType("IDENTIFIERS").toDFA();
+        // RegularExpression.getNFAForType("IDENTIFIERS").displayTransitions();
+        // identifierDFA.displayTransitions();
+        //
         integerDFA = RegularExpression.getNFAForType("CONSTANTS").toDFA();
-//      RegularExpression.getNFAForType("CONSTANTS").displayTransitions();
-//      integerDFA.displayTransitions();
-   
-        
+        // RegularExpression.getNFAForType("CONSTANTS").displayTransitions();
+        // integerDFA.displayTransitions();
+
         charDFA = RegularExpression.getNFAForType("CHARACTER").toDFA();
-//        RegularExpression.getNFAForType("CHARACTER").displayTransitions();
-//        charDFA.displayTransitions();
-        
+        // RegularExpression.getNFAForType("CHARACTER").displayTransitions();
+        // charDFA.displayTransitions();
+
         operatorDFA = RegularExpression.getNFAForType("OPERATORS").toDFA();
-//        RegularExpression.getNFAForType("OPERATORS").displayTransitions();
-//        operatorDFA.displayTransitions();
-        
+        // RegularExpression.getNFAForType("OPERATORS").displayTransitions();
+        // operatorDFA.displayTransitions();
+
         decimalDFA = RegularExpression.getNFAForType("DECIMAL").toDFA();
-        //RegularExpression.getNFAForType("DECIMAL").displayTransitions();
-       // decimalDFA.displayTransitions();
-        
+        // RegularExpression.getNFAForType("DECIMAL").displayTransitions();
+        // decimalDFA.displayTransitions();
+
         stringDFA = RegularExpression.getNFAForType("LITERAL").toDFA();
-        //RegularExpression.getNFAForType("LITERAL").displayTransitions();
-        
+        // RegularExpression.getNFAForType("LITERAL").displayTransitions();
+
         exponentDFA = RegularExpression.getNFAForType("EXPONENTS").toDFA();
     }
 
-//    private NFA createIdentifierNFA() {
-//        NFA identifierNFA = new NFA();
-//        identifierNFA.setStartState("q0");
-//        identifierNFA.addState("q1", true);
-//
-//        for (char c = 'a'; c <= 'z'; c++) {
-//            identifierNFA.addTransition("q0", c, "q1");
-//            identifierNFA.addTransition("q1", c, "q1");
-//        }
-//        for (char c = 'A'; c <= 'Z'; c++) {
-//            identifierNFA.addTransition("q0", c, "q1");
-//            identifierNFA.addTransition("q1", c, "q1");
-//        }
-//        identifierNFA.addTransition("q0", '_', "q1");
-//        identifierNFA.addTransition("q1", '_', "q1");
-//
-//        for (char c = '0'; c <= '9'; c++) {
-//            identifierNFA.addTransition("q1", c, "q1");
-//        }
-//        return identifierNFA;
-//    }
-//
-//    private NFA createIntegerNFA() {
-//        NFA nfa = new NFA();
-//        nfa.setStartState("q0");
-//        nfa.addState("q1", true);
-//
-//        for (char c = '0'; c <= '9'; c++) {
-//            nfa.addTransition("q0", c, "q1");
-//            nfa.addTransition("q1", c, "q1");
-//        }
-//        return nfa;
-//    }
-//
-//    private NFA createCharacterNFA() {
-//        NFA nfa = new NFA();
-//        nfa.setStartState("q0");
-//        nfa.addState("q3", true);
-//
-//        nfa.addTransition("q0", '\'', "q1");
-//        for (char c = 32; c <= 126; c++) {
-//            if (c != '\'')
-//                nfa.addTransition("q1", c, "q2");
-//        }
-//        nfa.addTransition("q2", '\'', "q3");
-//        return nfa;
-//    }
-//
-//    private NFA createOperatorNFA() {
-//        NFA nfa = new NFA();
-//        nfa.setStartState("q0");
-//        nfa.addState("q1", true);
-//        nfa.addTransition("q0", '=', "q1");
-//        nfa.addTransition("q0", '+', "q1");
-//        nfa.addTransition("q0", '-', "q1");
-//        nfa.addTransition("q0", '%', "q1");
-//        nfa.addTransition("q0", '/', "q1");
-//        return nfa;
-//    }
-    
+    // private NFA createIdentifierNFA() {
+    // NFA identifierNFA = new NFA();
+    // identifierNFA.setStartState("q0");
+    // identifierNFA.addState("q1", true);
+    //
+    // for (char c = 'a'; c <= 'z'; c++) {
+    // identifierNFA.addTransition("q0", c, "q1");
+    // identifierNFA.addTransition("q1", c, "q1");
+    // }
+    // for (char c = 'A'; c <= 'Z'; c++) {
+    // identifierNFA.addTransition("q0", c, "q1");
+    // identifierNFA.addTransition("q1", c, "q1");
+    // }
+    // identifierNFA.addTransition("q0", '_', "q1");
+    // identifierNFA.addTransition("q1", '_', "q1");
+    //
+    // for (char c = '0'; c <= '9'; c++) {
+    // identifierNFA.addTransition("q1", c, "q1");
+    // }
+    // return identifierNFA;
+    // }
+    //
+    // private NFA createIntegerNFA() {
+    // NFA nfa = new NFA();
+    // nfa.setStartState("q0");
+    // nfa.addState("q1", true);
+    //
+    // for (char c = '0'; c <= '9'; c++) {
+    // nfa.addTransition("q0", c, "q1");
+    // nfa.addTransition("q1", c, "q1");
+    // }
+    // return nfa;
+    // }
+    //
+    // private NFA createCharacterNFA() {
+    // NFA nfa = new NFA();
+    // nfa.setStartState("q0");
+    // nfa.addState("q3", true);
+    //
+    // nfa.addTransition("q0", '\'', "q1");
+    // for (char c = 32; c <= 126; c++) {
+    // if (c != '\'')
+    // nfa.addTransition("q1", c, "q2");
+    // }
+    // nfa.addTransition("q2", '\'', "q3");
+    // return nfa;
+    // }
+    //
+    // private NFA createOperatorNFA() {
+    // NFA nfa = new NFA();
+    // nfa.setStartState("q0");
+    // nfa.addState("q1", true);
+    // nfa.addTransition("q0", '=', "q1");
+    // nfa.addTransition("q0", '+', "q1");
+    // nfa.addTransition("q0", '-', "q1");
+    // nfa.addTransition("q0", '%', "q1");
+    // nfa.addTransition("q0", '/', "q1");
+    // return nfa;
+    // }
+
     public String removeDeComments(String input) {
         // Remove single-line comments (//...)
         input = input.replaceAll("//.*", "");
@@ -110,24 +110,23 @@ class LexicalAnalyzer {
         return input;
     }
 
-
     public List<String> tokenize(String input, SymbolTable symbolTable) {
         List<String> tokens = new ArrayList<>();
-        
+
         input = input.replace(";", "");
 
         input = removeDeComments(input);
         String[] lines = input.split("\n");
         int lineNumber = 1;
-        
 
         for (String line : lines) {
             String[] words = line.split("\\s+");
 
             for (String word : words) {
-                if (word.isEmpty()) continue;
+                if (word.isEmpty())
+                    continue;
 
-                if (keywordDFA.parse(word)) { //DFA here later
+                if (keywordDFA.parse(word)) { // DFA here later
                     tokens.add("KEYWORD: " + word);
                     symbolTable.insert(word, "KEYWORD", symbolTable.getCurrentScope(), null);
                 } else if (identifierDFA.parse(word)) {
@@ -136,23 +135,27 @@ class LexicalAnalyzer {
                 } else if (integerDFA.parse(word)) {
                     tokens.add("INTEGER: " + word);
                     symbolTable.insert(word, "INTEGER", symbolTable.getCurrentScope(), null);
-                }else if (exponentDFA.parse(word)) {
+                } else if (exponentDFA.parse(word)) {
                     tokens.add("EXPONENT: " + word);
                     symbolTable.insert(word, "EXPONENT", symbolTable.getCurrentScope(), null);
-                }else if(decimalDFA.parse(word)) {
-                	tokens.add("DECIMAL: " + word);
-                    symbolTable.insert(word, "DECIMAL", symbolTable.getCurrentScope(), null);	
+                } else if (decimalDFA.parse(word)) {
+                    BigDecimal roundedDecimal = new BigDecimal(word).setScale(5, RoundingMode.HALF_UP);
+                    String roundedWord = roundedDecimal.toPlainString();
+                    tokens.add("DECIMAL: " + roundedWord);
+                    symbolTable.insert(roundedWord, "DECIMAL", symbolTable.getCurrentScope(), null);
+
                 } else if (charDFA.parse(word)) {
                     tokens.add("CHARACTER: " + word);
                     symbolTable.insert(word, "CHARACTER", symbolTable.getCurrentScope(), null);
-                } else if (stringDFA.parse(word)){ 
-                	tokens.add("LITERAL: " + word);
-                	symbolTable.insert(word, "LITERAL", symbolTable.getCurrentScope(), null);
+                } else if (stringDFA.parse(word)) {
+                    tokens.add("LITERAL: " + word);
+                    symbolTable.insert(word, "LITERAL", symbolTable.getCurrentScope(), null);
                 } else if (operatorDFA.parse(word)) {
                     tokens.add("OPERATOR: " + word);
                     symbolTable.insert(word, "OPERATOR", symbolTable.getCurrentScope(), null);
                 } else {
-                	errHandler.setError(utils.RED + "Unrecognized Token on Line " + lineNumber + " ** ( - " + word +  " ) " + utils.RESET, lineNumber);
+                    errHandler.setError(utils.RED + "Unrecognized Token on Line " + lineNumber + " ** ( - " + word
+                            + " ) " + utils.RESET, lineNumber);
                     errHandler.displayErr();
                     tokens.add("UNKNOWN (Line  " + lineNumber + "): " + word);
                 }

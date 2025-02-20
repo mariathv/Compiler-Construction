@@ -6,15 +6,16 @@ class RegularExpression {
 
     static {
         // Predefined Regular Expressions
-    	regexPatterns.put("KEYWORDS", "true|false|intgr|chr|dec|boo|strg|input|output");
-        regexPatterns.put("IDENTIFIERS", "[a-z_][a-z0-9_]*"); // if * comes at end i check and makes the prev state final as well
-        regexPatterns.put("CONSTANTS", "[0-9][0-9]*");		  // if * comes in between it becomes +
-        regexPatterns.put("EXPONENTS", "[0-9]*^[0-9]*");
-        regexPatterns.put("OPERATORS", "+|-|*|%|=");
-        regexPatterns.put("CHARACTER", "'[a-zA-Z]'");
-        regexPatterns.put("DECIMAL", "[0-9]*.[0-9]*");
+        regexPatterns.put("KEYWORDS", "true|false|intgr|chr|dec|boo|strg|input|output");
+        regexPatterns.put("IDENTIFIERS", "[a-z_][a-z0-9_]*"); // if * comes at end i check and makes the prev state
+                                                              // final as well
+        regexPatterns.put("CONSTANTS", "[0-9][0-9]*"); // if * comes in between it becomes +
+        regexPatterns.put("EXPONENTS", "[0-9]*^[0-9][0-9]*");
+        regexPatterns.put("OPERATORS", "+|-|*|%|=|/");
+        regexPatterns.put("CHARACTER", "'[!-~]'");
+        regexPatterns.put("DECIMAL", "[0-9]*.[0-9][0-9]*");
         regexPatterns.put("LITERAL", "\"[!-~][!-~]*\"");
-    }		
+    }
 
     public RegularExpression(String pattern) {
         this.pattern = pattern;
