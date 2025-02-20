@@ -58,13 +58,11 @@ class DFA {
         String currentState = startState; //starting state of the dfa
         Set<String> visitedStates = new HashSet<>(); // to store unique visited states (for display after)
         
-        boolean errFlag = false;
         for (char symbol : input.toCharArray()) {
             visitedStates.add(currentState);
             if (transitions.containsKey(currentState) && transitions.get(currentState).containsKey(symbol)) {
                 currentState = transitions.get(currentState).get(symbol);
             }else {
-            	errFlag=true;
             	return false;
             
             }
@@ -79,7 +77,6 @@ class DFA {
 
 
         
-        return !errFlag;
+        return finalStates.contains(currentState);
     }
 }
-

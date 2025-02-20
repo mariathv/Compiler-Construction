@@ -4,14 +4,14 @@ import java.util.*;
 class LexicalAnalyzer {
 	
     
-    public DFA identifierDFA, integerDFA, keywordDFA, charDFA, operatorDFA, decimalDFA, stringDFA;
+    public DFA identifierDFA, integerDFA, keywordDFA, charDFA, operatorDFA, decimalDFA, stringDFA, exponentDFA;
     private ErrorHandler errHandler = new ErrorHandler();
     private Utilities utils = new Utilities();
 
     public LexicalAnalyzer() {
     	keywordDFA =  RegularExpression.getNFAForType("KEYWORDS").toDFA();
  //   	RegularExpression.getNFAForType("KEYWORDS").displayTransitions();	
-//    	keywordDFA.displayTransitions();
+ //   	keywordDFA.displayTransitions();
     	
     	identifierDFA = RegularExpression.getNFAForType("IDENTIFIERS").toDFA();    	
 //    	RegularExpression.getNFAForType("IDENTIFIERS").displayTransitions();
@@ -19,7 +19,7 @@ class LexicalAnalyzer {
 //        
         integerDFA = RegularExpression.getNFAForType("CONSTANTS").toDFA();
 //        RegularExpression.getNFAForType("CONSTANTS").displayTransitions();
-//        integerDFA.displayTransitions();
+//       integerDFA.displayTransitions();
    
         
         charDFA = RegularExpression.getNFAForType("CHARACTER").toDFA();
@@ -33,6 +33,8 @@ class LexicalAnalyzer {
         decimalDFA = RegularExpression.getNFAForType("DECIMAL").toDFA();
         stringDFA = RegularExpression.getNFAForType("LITERAL").toDFA();
         //RegularExpression.getNFAForType("LITERAL").displayTransitions();
+        
+        exponentDFA = RegularExpression.getNFAForType("EXPONENTS").toDFA();
     }
 
 //    private NFA createIdentifierNFA() {
@@ -99,8 +101,8 @@ class LexicalAnalyzer {
         // Remove single-line comments (//...)
         input = input.replaceAll("//.*", "");
 
-        // Remove multi-line comments (/* ... */)
-        input = input.replaceAll("/\\*.*?\\*/", "");
+        // Remove multi-line comments (/* ... */) using DOTALL mode
+        input = input.replaceAll("(?s)/\\*.*?\\*/", "");
 
         return input;
     }
@@ -131,6 +133,9 @@ class LexicalAnalyzer {
                 } else if (integerDFA.parse(word)) {
                     tokens.add("INTEGER: " + word);
                     symbolTable.insert(word, "INTEGER", symbolTable.getCurrentScope(), null);
+                }else if (exponentDFA.parse(word)) {
+                    tokens.add("EXPONENT: " + word);
+                    symbolTable.insert(word, "EXPONENT", symbolTable.getCurrentScope(), null);
                 }else if(decimalDFA.parse(word)) {
                 	tokens.add("DECIMAL: " + word);
                     symbolTable.insert(word, "DECIMAL", symbolTable.getCurrentScope(), null);	

@@ -65,6 +65,15 @@ class NFA {
                 System.out.println(state + " -- " + symbol + " --> " + transitions.get(state).get(symbol));
             }
         }
+        
+        System.out.println("\nFinal States:");
+        if (finalStates.isEmpty()) {
+            System.out.println("No final states.");
+        } else {
+            for (String finalState : finalStates) {
+                System.out.println(finalState);
+            }
+        }
     }
 
     public void parse(String input) {
@@ -150,6 +159,7 @@ class NFA {
             			String state2 = "q" + (counter+1);
             			String state3 = "q" + (counter+2);
             			
+            			
             			for (char c = ch1; c <= ch2; c++) {
             				nfa.addTransition(state1, 'ε', state2);
             				nfa.addTransition(state2, c, state3);
@@ -175,9 +185,12 @@ class NFA {
             	while (regex.charAt(j) != '[')
             		j--;
             	j++;
+            	//String s0 = "q" + (counter-2);
+            	//nfa.addState(s0, true);
             	String s1 = "q" + counter;
                 counter++;
                 String s2 = "q" + counter;
+                //nfa.addState(s2, true);
                 nfa.addTransition(s1, 'ε', s2);
             	for(; ; j++)
             	{
@@ -221,6 +234,11 @@ class NFA {
 
         String Final = "q" + counter;
         nfa.addState(Final, true);
+        if (regex.charAt(regex.length()-1) == '*')
+        {
+        	String s0 = "q" + (counter-2);
+        	nfa.addState(s0, true);
+        }
         
         return nfa;
     }

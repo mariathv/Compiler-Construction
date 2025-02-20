@@ -9,10 +9,11 @@ class RegularExpression {
     	regexPatterns.put("KEYWORDS", "true|false|intgr|chr|dec|boo|strg|input|output");
         regexPatterns.put("IDENTIFIERS", "[a-z_][a-z0-9_]*");
         regexPatterns.put("CONSTANTS", "[0-9][0-9]*");
+        regexPatterns.put("EXPONENTS", "[0-9][0-9]*^[0-9][0-9]*");
         regexPatterns.put("OPERATORS", "+|-|*|%|=");
         regexPatterns.put("CHARACTER", "'[a-zA-Z]'");
         regexPatterns.put("DECIMAL", "[0-9][0-9]*.[0-9][0-9]*");
-        regexPatterns.put("LITERAL", "\"[!-@^-~][!-@^-~]*\"");
+        regexPatterns.put("LITERAL", "\"[!-~][!-~]*\"");
     }		
 
     public RegularExpression(String pattern) {

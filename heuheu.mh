@@ -1,8 +1,9 @@
-int x = 10;
+int x = 100;
 chr y = 'A';
 true;
 false;
 0my_var = 25;
 my_var = 12 + 25;
 dec ee = 311.22
-strg ww = "hel$#@^&"
+strg www = "hLE&$#@^"
+intgr qq = 10^2;
