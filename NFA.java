@@ -256,6 +256,9 @@ class NFA {
                 if (transitions.containsKey(nfaState)) { //check if transition tables has entries with the nfa state, or in other words if the state has any transition
                     for (Map.Entry<Character, Set<String>> entry : transitions.get(nfaState).entrySet()) {//get all transitions in form q0 = {'a' -> {q1,q2}, 'b' -> {q1,q3}} 
                         char symbol = entry.getKey(); //entry in format :: { a -> {q0, q1}} , extract its symbol
+                        
+                        if (symbol == 'ε') continue;
+                        
                         newTransitions.putIfAbsent(symbol, new HashSet<>());
                         newTransitions.get(symbol).addAll(entry.getValue());
                     }
@@ -286,15 +289,15 @@ class NFA {
         
         while (!stack.isEmpty()) {
             String state = stack.pop();
-            if (transitions.containsKey(state) && transitions.get(state).containsKey('\u03B5')) { // ε transitions
-                for (String next : transitions.get(state).get('\u03B5')) {
+            if (transitions.containsKey(state) && transitions.get(state).containsKey('ε')) { // ε transitions
+                for (String next : transitions.get(state).get('ε')) {
                     if (!closure.contains(next)) {
                         closure.add(next);
                         stack.push(next);
                     }
                 }
             }
-        }
+        }	
         
         return closure;
     }

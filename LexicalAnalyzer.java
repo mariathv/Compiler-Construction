@@ -130,16 +130,16 @@ class LexicalAnalyzer {
                     symbolTable.insert(word, "IDENTIFIER", symbolTable.getCurrentScope(), null);
                 } else if (integerDFA.parse(word)) {
                     tokens.add("INTEGER: " + word);
-                    symbolTable.insert(word, "INTEGER", symbolTable.getCurrentScope(), word);
+                    symbolTable.insert(word, "INTEGER", symbolTable.getCurrentScope(), null);
                 }else if(decimalDFA.parse(word)) {
                 	tokens.add("DECIMAL: " + word);
-                    symbolTable.insert(word, "DECIMAL", symbolTable.getCurrentScope(), word);	
+                    symbolTable.insert(word, "DECIMAL", symbolTable.getCurrentScope(), null);	
                 } else if (charDFA.parse(word)) {
                     tokens.add("CHARACTER: " + word);
-                    symbolTable.insert(word, "CHARACTER", symbolTable.getCurrentScope(), word);
+                    symbolTable.insert(word, "CHARACTER", symbolTable.getCurrentScope(), null);
                 } else if (stringDFA.parse(word)){ 
                 	tokens.add("LITERAL: " + word);
-                	symbolTable.insert(word, "LITERAL", symbolTable.getCurrentScope(), word);
+                	symbolTable.insert(word, "LITERAL", symbolTable.getCurrentScope(), null);
                 } else if (operatorDFA.parse(word)) {
                     tokens.add("OPERATOR: " + word);
                     symbolTable.insert(word, "OPERATOR", symbolTable.getCurrentScope(), null);

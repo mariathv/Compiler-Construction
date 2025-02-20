@@ -1,4 +1,8 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
+import java.io.*;
 
 
 public class LexicalAnalyzerCLI {
@@ -16,9 +20,10 @@ public class LexicalAnalyzerCLI {
         while (true) {
             utils.displayMenu("LEXICAL ANALYZER");
             System.out.println(utils.YELLOW + "(1)" + utils.RESET + " * Analyze Code");
-            System.out.println(utils.YELLOW + "(2)" + utils.RESET + " * View Token List");
-            System.out.println(utils.YELLOW + "(3)" + utils.RESET + " * View Symbol Table");
-            System.out.println(utils.YELLOW + "(4)" + utils.RESET + " * Display Transitions");
+            System.out.println(utils.YELLOW + "(2)" + utils.RESET + " * Input From File");
+            System.out.println(utils.YELLOW + "(3)" + utils.RESET + " * View Token List");
+            System.out.println(utils.YELLOW + "(4)" + utils.RESET + " * View Symbol Table");
+            System.out.println(utils.YELLOW + "(5)" + utils.RESET + " * Display Transitions");
             System.out.println(utils.YELLOW + "(0)" + utils.RESET + " * Exit");
             System.out.print("Enter your choice: ");
             
@@ -31,12 +36,15 @@ public class LexicalAnalyzerCLI {
                     analyzeCode();
                     break;
                 case 2:
+                	inputFromFile();
+                	break;
+                case 3:
                     displayTokens();
                     break;
-                case 3:
+                case 4:
                     displaySymbolTable();
                     break;
-                case 4:
+                case 5:
                 	displayTransitionTables();
                 	break;
                 case 0:
@@ -47,6 +55,47 @@ public class LexicalAnalyzerCLI {
                     System.out.println("Invalid choice. Please try again.");
             }
         }
+    }
+
+    private static void inputFromFile() {
+        System.out.println("Enter File name (.mh //" + utils.YELLOW + " must be in the same directory" + utils.RESET + ") : ");
+        
+        String fileName;
+        while (true) { 
+            fileName = scanner.nextLine().trim();
+            
+            if (!fileName.endsWith(".mh")) {
+                System.err.println(utils.RED + "Error: Invalid file type! Please enter a .mh file." + utils.RESET);
+                System.out.println("Try again (.mh file required): ");
+                continue;
+            }
+
+            File file = new File(fileName);
+            if (!file.exists()) {
+                System.err.println(utils.RED + "Error: File not found! Ensure it exists in the same directory." + utils.RESET);
+                System.out.println("Try again (.mh file required): ");
+                continue; 
+            }
+
+            break; //
+        }
+
+        StringBuilder inputProgram = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                inputProgram.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+            return;
+        }
+
+        System.out.println(utils.CYAN + "\nUNIQUE STATES VISITED \n----------------------" + utils.RESET);
+        tokens = analyzer.tokenize(inputProgram.toString().replaceAll("[;]", " "), symbolTable);
+        System.out.println(utils.GREEN + "\nTotal Tokens: " + tokens.size() + utils.RESET);
+        displaySymbolTable();
     }
 
     private static void analyzeCode() {
@@ -64,8 +113,11 @@ public class LexicalAnalyzerCLI {
 
             inputCode.append(line).append("\n");
         }
-
+        System.out.println(utils.CYAN +  "\nUNIQUE STATES VISITED \n----------------------" + utils.RESET);
         tokens = analyzer.tokenize(inputCode.toString(), symbolTable);
+        System.out.println(utils.GREEN + "\nTotal Tokens: " + tokens.size() + utils.RESET);
+        
+        displaySymbolTable();
     }
 
     private static void displayTokens() {
@@ -88,7 +140,7 @@ public class LexicalAnalyzerCLI {
     	if(choice == 1) {
     		analyzer.identifierDFA.displayTransitions();
     	}else if(choice ==2) {
-    		//analyzer.keywordDFA.displayTransitions(); no keyword dfa yet
+    		analyzer.keywordDFA.displayTransitions(); 
     	}
     	else if(choice ==3) {
     		analyzer.operatorDFA.displayTransitions();
