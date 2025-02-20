@@ -40,10 +40,6 @@ The language supports four primary data types:
 - Identifiers can contain **letters (`a-z`), digits (`0-9`), and underscores (`_`)**.
 - Example: `my_var`, `count_1`, `x`
 
-**Regular Expression:**  
-```
-[a-z_][a-z0-9_]*
-```
 
 ---
 
@@ -51,11 +47,6 @@ The language supports four primary data types:
 - Integer Constants: Any sequence of digits (`0-9`)
 - Decimal Constants: Whole number followed by a `.` and fractional part (`3.14159`)
 
-**Regular Expressions:**  
-```
-Integer: [0-9]+
-Decimal: [0-9]+(\.[0-9]{1,5})?
-```
 
 > **Decimals are accurate up to five decimal places.**
 
@@ -72,10 +63,6 @@ The language supports basic arithmetic operations:
 | `/`      | Division |
 | `%`      | Modulus |
 
-**Regular Expression:**  
-```
-\+|\-|\*|/|%|\^
-```
 
 ---
 
@@ -84,10 +71,6 @@ A character must be enclosed within **single quotes (`'`)**.
 
 **Examples:** `'A'`, `'z'`, `'#'`
 
-**Regular Expression:**  
-```
-'[^']'
-```
 
 ---
 
@@ -96,10 +79,6 @@ Strings must be enclosed within **double quotes (`" "`)**.
 
 **Example:** `"Hello, world!"`
 
-**Regular Expression:**  
-```
-"[^"]*"
-```
 
 ---
 
